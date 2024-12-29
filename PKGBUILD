@@ -61,10 +61,17 @@ source=(
   gpg-agent-{browser,extra,ssh}{,@}.socket
   keyboxd{,@}.{service,socket}
   $pkgname-2.4-avoid_beta_warning.patch  # do not emit beta warnings (due to misbehaving build system)
-  $pkgname-2.4-drop_import_clean.patch  # do not potentially remove components on certificates during import
-  $pkgname-2.4-revert_default_rfc4880bis.patch  # v5 is incompatible with other implementations and v6
-  $pkgname-2.4-keep-systemd-support.patch
-  $pkgname-2.4-keyboxd-systemd-support.patch
+  # patches maintained by freepg project: https://gitlab.com/freepg/gnupg
+  0001-gpg-accept-subkeys-with-a-good-revocation-but-no-sel.patch
+  0002-gpg-allow-import-of-previously-known-keys-even-witho.patch
+  0003-tests-add-test-cases-for-import-without-uid.patch
+  0004-gpg-drop-import-clean-from-default-keyserver-import-.patch
+  0005-Do-not-use-OCB-mode-even-if-AEAD-OCB-key-preference-.patch
+  0006-Revert-the-introduction-of-the-RFC4880bis-draft-into.patch
+  0007-avoid-systemd-deprecation-warning.patch
+  0008-Add-systemd-support-for-keyboxd.patch
+  0009-doc-Remove-profile-and-systemd-example-files.patch
+  v3-0001-Disallow-compressed-signatures-and-certificates.patch  # CVE-2022-3219
 )
 sha256sums=('4e946396a8a3cf8e0b997c5ea87e5732efdc7fee2037d96b0eeb911cd350dab0'
             '80a3a80f9f1f337da555a6838483e1baca44cde8a8a3d8c4ba7743626304b981'
@@ -86,10 +93,16 @@ sha256sums=('4e946396a8a3cf8e0b997c5ea87e5732efdc7fee2037d96b0eeb911cd350dab0'
             'f25c79a2e135f41b9b84bab416be22cbeb5c32dc92d23a463638d2947ece9703'
             'dc949c2ed9f3439d12ab57fd3b0e4b690e17e6cf46b6ec608def4c44adc6fdea'
             '243c3a79295519b3931f9d846cf2af5caa064a78de812ee336dc786c1567b4d0'
-            '6ade15b536c50a88efc2d9dc958433b0ccfaf2908025b7672753e6bfce51c3c6'
-            'ef2267eecd9eb59bbbbdb97d55cbfe10236b4979a125c6683a840830bc202905'
-            '677ca409e8ece61e64a94102a2b71ec119941b5ae0f0ed4f1c4f2c0c2bdd158a'
-            'e0aff9f80abb6059e41cb3bb7cc86b7aa3fc1c27626676385c5479d69ef830a1')
+            'faf897297f32791c6433e9c9f82c712970c4b8ae7beba3e04045e6fc71c3d521'
+            '8a3de769a2dd42d345ed9736ae442f99a5eaf3b74d7d45c478b3940e74b33d06'
+            'b7911ab725e92fa6d35d03c07dde9264d86339c9ffd93c47a04745b2a6043170'
+            '6e85911257d5c144b2d9e72ed90255e2d2abe3969b46869729f47afdd8b126cb'
+            '4b3d7c8d5251742b1aca62ab7760e7cbfec689fecf387852295636da0caed78a'
+            '9ede04c0f35c6e99cee934e46e93a585e3974199c16671775da800d32580e26d'
+            '04df2639afa45fa3415de8616c991ff6b75e64455ae105a541b77b31f86c4033'
+            '82d5309aec5f379bd7b7a2c79c16121f16975fe21546e81358bf78a0e1b594cc'
+            '2e6750ebd5f72973c99c8d81cf2cf934419b15844287e859c599ff14d63d35e1'
+            '707f45f1458ea8c762e0b6863ede97fe0e2642ada99a0909edc4359ff415419b')
 b2sums=('2c53de51bdde9c7107b6cad253ee552987c43a1f8969e7888fb7017811260b62ad7e06fd470693a8a768bf690b596d514b50795add3a27f3587d5fe439e7518e'
         '7a3af856305eb4b00929aaf029dd4e5c84376df4f30add76976b9b058addf6fc4d8c39335fc83d11493ea9d8a40f0510dbac8572b99a8c8b9b3a4eca8e585774'
         'ee51a4702715f5ec2629ff42eeba8630010da8a67545d1e53961e710de5faf197708e55d2d55796917a134ca2a76b1d6c88a8f7756d0706e0cbc33b605f52d86'
@@ -110,10 +123,16 @@ b2sums=('2c53de51bdde9c7107b6cad253ee552987c43a1f8969e7888fb7017811260b62ad7e06f
         'bb88f65e71537e8fec6bb21487589d4c94e590fc580717ce59bf332b748a62d73a1c8c6f8372efaf0253954b03026c6a924e7a947f4ae293ef0afab9bfcfabad'
         'e5f8da906d225e495e975793e7ba996a038ab5e96e8f3855d33499cdd98da1a68739ae13d0ec4bccc598b12bdeadaf1142b3726f6b5a9de5cbbc989806e99187'
         '168855b598714abb27e01e52e0ed1e1a01ab14ffb2ee09d759308375359cd28c0a9f96c6b9dee0a2cc5713aec8ea831858d59f56a0a126bca3e1401b078fc7ab'
-        '0b9546c102724f1dbb90ad3c45307eed3491a5ea79940eba1184e6d466f399f279a23e73bac6b0bb0d662aa4599d0a4a0f331b0df3fe7fa6e7590c1074fc2ed1'
-        '009c1a935021c987cd3c15581250090edfcd1a6dd30622db2701295f047384e03ba97590ca6993d410e81a6fd7c274468cd58a1904d51f432d572df39ee178d6'
-        '2801ecc6db1f6fe33a8a83756b272d9f363509c5804c501045002e9ac509fc22bcb16dfd107bcbe870756748d2ebc2dbdc3b7c0f74c8b7f52207553ca5e0145b'
-        '070aaca7cd1a5f994eeb84ac2b07d6ddd80b5cb21dec4d0763ab599f3849611143314faa5af7f1eb2cfb924dd49e44ec11b28763aa1980f61e74cdf368bed545')
+        'd9c78a2c5c57c28d18fad7ca6761e2b593980496bfb0dbd16b9feb85b44f365fe93971cf2051c5aa8e3926d7b9d1a530c899fe221ff891b80d1fbcddce362c2f'
+        '6c80c1dec8665fdabba83386d9d188cb03f9b57d14553cc499e8dbeb7d5d57efd12b401114bb8b6335c516a4bf90c1427909fa43f0033296c420081765cf4de8'
+        'a5c54e3d8532197f1a2fc83b00d1c1238af15e8c0cf9fa87d081cec8b9a191052bb7571b7b66229842ae7df1574bed523bcfc27af7e09fab1a4a6ee17bf74101'
+        'd1df71cc42d867803e9fc94915375a417b10f1931e834b5dffd901362e0e06dbe13c83869a0b76cbeb39ed606b220b2ebb4b027859bb154d7ab89cdc39584ca4'
+        'a23a28cc7ecaef6c70e5294e6357fcd59ab3760f482573c985e3d61753a45ee520cd472da87bacdc2ed8d6c67b7f27b1b18e2024c9eb25827c1a987fdcde5dcd'
+        '15b368bedb37d9d540b856792de7df67619a79248c2970b7e1cc313aad5a0e50a9a62e3afd9d7d4bc2cc2cdf7bf9573cc525887a9a03e05495fd1e70ef3d7060'
+        '76e09f672e126afb7c205ea9b59dff237e7e5e53fc8dc294838a10aba33ebe3359078e0d3c2dfd35c01acae8b6dbfa42df20c086fb60b1bc6bf9ed2f53917804'
+        '81fa180793711321bd0628162267ee927289fb6df9eb9f64c4aa0c59a6cdada1a89d9d82a77717f9a0ba6f13d7a98f2f45372d8b21a00fcf6a41e5607eeeb4f5'
+        'd9c97811bca5c511b9d1bd5abf8303c81f092b12a457c8511f782edf691483af342e41c0194a6671c8ac7c065059b7abf80493191e4ee1eb73c272718eb6e0cb'
+        '345866dc0f2bc24967baea4f5580cca040a82919b342a117e28209ae6e46738a22475c9a4194d5af6f5ab3d410100ca0416f8957f3bdfbcd531a407b60a9e358')
 validpgpkeys=(
   '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28' # Andre Heinecke (Release Signing Key)
   '6DAA6E64A76D2840571B4902528897B826403ADA' # Werner Koch (dist signing 2020)
