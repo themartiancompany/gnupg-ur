@@ -1,21 +1,26 @@
-From 718947130f297204ac06c322632953be380f1864 Mon Sep 17 00:00:00 2001
-From: Werner Koch <wk@gnupg.org>
+From 5d14bd48fc146a182e3f7ee34fb5444117eb17d0 Mon Sep 17 00:00:00 2001
+From: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
 Date: Mon, 23 Jan 2023 16:34:19 +0100
-Subject: [PATCH 9/9] doc: Remove profile and systemd example files.
+Subject: [PATCH 07/21] Ship sample systemd unit files
 
---
+This reverts the systemd-relevant parts of upstream's
+eae28f1bd4a5632e8f8e85b7248d1c4d4a10a5ed
 
-The profiles are not any longer useful because global options are way
-more powerful (/etc/gnupg/gpg.conf et al.).  The use of systemd is
-deprecated because of additional complexity and the race between
-systemd based autolaunching and the explicit gnupg based and lockfile
-protected autolaunching.
+In that commit, Werner Koch wrote:
+
+> The use of systemd is deprecated because of additional complexity
+> and the race between systemd based autolaunching and the explicit
+> gnupg based and lockfile protected autolaunching.
+
+FreePG aims to support socket-activated systemd integration for modern
+Gnu/Linux systems that use GnuPG.  That integration does not appear to
+actually have the race condition posited by Werner above, as described
+by Coelacanthus in https://dev.gnupg.org/T6336#171407
 
 GnuPG-bug-id: 6336
 ---
  doc/Makefile.am                               |  8 +++
  doc/examples/README                           |  2 +
- doc/examples/gpgconf.conf                     |  4 --
  doc/examples/systemd-user/README              | 66 +++++++++++++++++++
  doc/examples/systemd-user/dirmngr.service     |  8 +++
  doc/examples/systemd-user/dirmngr.socket      | 11 ++++
@@ -24,7 +29,7 @@ GnuPG-bug-id: 6336
  .../systemd-user/gpg-agent-ssh.socket         | 13 ++++
  doc/examples/systemd-user/gpg-agent.service   |  8 +++
  doc/examples/systemd-user/gpg-agent.socket    | 12 ++++
- 11 files changed, 154 insertions(+), 4 deletions(-)
+ 10 files changed, 154 insertions(+)
  create mode 100644 doc/examples/systemd-user/README
  create mode 100644 doc/examples/systemd-user/dirmngr.service
  create mode 100644 doc/examples/systemd-user/dirmngr.socket
@@ -66,20 +71,6 @@ index cd341ab57..67508c471 100644
  qualified.txt   Sample file for qualified.txt.
  
  common.conf     Sample file for common options.
-diff --git a/doc/examples/gpgconf.conf b/doc/examples/gpgconf.conf
-index 314b955b9..a61d4d453 100644
---- a/doc/examples/gpgconf.conf
-+++ b/doc/examples/gpgconf.conf
-@@ -1,9 +1,5 @@
- # gpgconf.conf - configuration for gpgconf
- #----------------------------------------------------------------------
--#
--# === The use of this feature is deprecated ===
--# == Please use the more powerful global options. ==
--#
- # This file is read by gpgconf(1) to setup defaults for all or
- # specified users and groups.  It may be used to change the hardwired
- # defaults in gpgconf and to enforce certain values for the various
 diff --git a/doc/examples/systemd-user/README b/doc/examples/systemd-user/README
 new file mode 100644
 index 000000000..43122f568
@@ -273,5 +264,5 @@ index 000000000..4257c2c80
 +[Install]
 +WantedBy=sockets.target
 -- 
-2.47.1
+2.49.0
 

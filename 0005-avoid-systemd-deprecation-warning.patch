@@ -1,7 +1,7 @@
-From ab8986c2bd421d70b6846616b1a000dbe9f6e9af Mon Sep 17 00:00:00 2001
+From ee8f4a33ebb3b3ad15ca54e15f71976f6af5747b Mon Sep 17 00:00:00 2001
 From: NIIBE Yutaka <gniibe@fsij.org>
 Date: Mon, 21 Aug 2023 14:22:50 +0900
-Subject: [PATCH 7/9] avoid-systemd-deprecation-warning
+Subject: [PATCH 05/21] avoid-systemd-deprecation-warning
 
 ---
  agent/gpg-agent.c | 3 ---
@@ -37,5 +37,5 @@ index 5a9db1491..a8c3d2281 100644
           already opened, listening socket.
  
 -- 
-2.47.1
+2.49.0
 

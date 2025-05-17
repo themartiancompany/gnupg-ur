@@ -1,7 +1,7 @@
-From e28d03f6234dfdebaafca1cfedaa0cf8a60a3ac5 Mon Sep 17 00:00:00 2001
+From e99fa34cbe49c83c114d48004195eacb98e33e09 Mon Sep 17 00:00:00 2001
 From: Vincent Breitmoser <look@my.amazin.horse>
 Date: Thu, 13 Jun 2019 21:27:41 +0200
-Subject: [PATCH 3/9] tests: add test cases for import without uid
+Subject: [PATCH 03/21] tests: add test cases for import without uid
 
 This commit adds a test case that does the following, in order:
 - Import of a primary key plus user id
@@ -21,13 +21,13 @@ GnuPG-Bug-id: 4393
 Signed-Off-By: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
 ---
  tests/openpgp/Makefile.am                     |  1 +
- tests/openpgp/import-incomplete.scm           | 68 +++++++++++++++++++
+ tests/openpgp/import-incomplete.scm           | 67 +++++++++++++++++++
  .../import-incomplete/primary+revocation.asc  |  9 +++
  .../primary+subkey+sub-revocation.asc         | 10 +++
  .../primary+subkey+sub-sig.asc                | 10 +++
  .../import-incomplete/primary+uid-sig.asc     | 10 +++
  .../openpgp/import-incomplete/primary+uid.asc | 10 +++
- 7 files changed, 118 insertions(+)
+ 7 files changed, 117 insertions(+)
  create mode 100755 tests/openpgp/import-incomplete.scm
  create mode 100644 tests/openpgp/import-incomplete/primary+revocation.asc
  create mode 100644 tests/openpgp/import-incomplete/primary+subkey+sub-revocation.asc
@@ -49,10 +49,10 @@ index 7998d2ab9..ea8207e28 100644
  	4gb-packet.scm \
 diff --git a/tests/openpgp/import-incomplete.scm b/tests/openpgp/import-incomplete.scm
 new file mode 100755
-index 000000000..727a027c6
+index 000000000..331e10153
 --- /dev/null
 +++ b/tests/openpgp/import-incomplete.scm
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,67 @@
 +#!/usr/bin/env gpgscm
 +
 +;; Copyright (C) 2016 g10 Code GmbH
@@ -120,7 +120,6 @@ index 000000000..727a027c6
 +			(string-contains? line "0843DA969AA8DAFB")))
 +		 (string-split-newlines c))
 +	    (exit 1)))))
-+
 diff --git a/tests/openpgp/import-incomplete/primary+revocation.asc b/tests/openpgp/import-incomplete/primary+revocation.asc
 new file mode 100644
 index 000000000..6b7b60802
@@ -201,5 +200,5 @@ index 000000000..055f30086
 +=1eII
 +-----END PGP PUBLIC KEY BLOCK-----
 -- 
-2.47.1
+2.49.0
 

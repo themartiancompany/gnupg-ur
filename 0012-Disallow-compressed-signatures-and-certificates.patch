@@ -1,15 +1,14 @@
-From 459b61fa21db755d6c879c3ef9ab85b3d1786c9f Mon Sep 17 00:00:00 2001
-From: Demi Marie Obenour <demi () invisiblethingslab com>
-Date: Fri, 27 May 2022 19:51:19 -0400
-Subject: [PATCH GnuPG v3] Disallow compressed signatures and certificates
+From 8c685c67f684752ee1c02c774234938e5b9bef56 Mon Sep 17 00:00:00 2001
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+Date: Wed, 29 Jun 2022 11:07:28 -0400
+Subject: [PATCH 12/21] Disallow compressed signatures and certificates
 
-Compressed packets have significant attack surface, due to the potential
-for both denial of service (zip bombs and the like) and for code
+Compressed packets have significant attack surface, both due to the
+potential for denial of service (zip bombs and the like) and for code
 execution via memory corruption vulnerabilities in the decompressor.
 Furthermore, I am not aware of any implementation that uses them in keys
 or detached signatures.  Therefore, disallow their use in such contexts
-entirely.  This includes signatures that are part of a cleartext-signed
-message.
+entirely.
 
 When parsing detached signatures, forbid any packet that is not a
 signature or marker packet.  When parsing keys, return an error when
@@ -18,23 +17,21 @@ encountering a compressed packet, instead of decompressing the packet.
 Furthermore, certificates, keys, and signatures are not allowed to
 contain partial-length or indeterminate-length packets.  Reject those in
 parse_packet, rather than activating the partial-length filter code.
-This is not (yet) implemented for cleartext-signed messages, as these
-messages are internally represented as inline-signed messages.
 
 GnuPG-bug-id: T5993
-Signed-off-by: Demi Marie Obenour <demiobenour () gmail com>
+Signed-off-by: Demi Marie Obenour <demi@invisiblethingslab.com>
 ---
  g10/import.c       | 18 ++----------------
- g10/mainproc.c     | 24 +++++++++++++++++++++---
+ g10/mainproc.c     | 17 +++++++++++++++--
  g10/packet.h       |  2 ++
  g10/parse-packet.c | 44 +++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 68 insertions(+), 20 deletions(-)
+ 4 files changed, 62 insertions(+), 19 deletions(-)
 
 diff --git a/g10/import.c b/g10/import.c
-index bb0bf67934a8316130cde182cd43d56353e0171d..a8136351f6f7dae8c65634ed8e1c242d323e2009 100644
+index d93453e68..edd354ab1 100644
 --- a/g10/import.c
 +++ b/g10/import.c
-@@ -1042,22 +1042,8 @@ read_block( IOBUF a, unsigned int options,
+@@ -1057,22 +1057,8 @@ read_block( IOBUF a, unsigned int options,
        switch (pkt->pkttype)
          {
          case PKT_COMPRESSED:
@@ -60,10 +57,10 @@ index bb0bf67934a8316130cde182cd43d56353e0171d..a8136351f6f7dae8c65634ed8e1c242d
          case PKT_RING_TRUST:
            /* Skip those packets unless we are in restore mode.  */
 diff --git a/g10/mainproc.c b/g10/mainproc.c
-index af11877aa257e46662c42b6ff573ee01c3ad1547..3629fc921b742afd131e8d8e2664b201095990f0 100644
+index 739ad0a35..8c13c99c1 100644
 --- a/g10/mainproc.c
 +++ b/g10/mainproc.c
-@@ -152,6 +152,7 @@ add_onepass_sig (CTX c, PACKET *pkt)
+@@ -170,6 +170,7 @@ add_onepass_sig (CTX c, PACKET *pkt)
  {
    kbnode_t node;
  
@@ -71,18 +68,11 @@ index af11877aa257e46662c42b6ff573ee01c3ad1547..3629fc921b742afd131e8d8e2664b201
    if (c->list) /* Add another packet. */
      add_kbnode (c->list, new_kbnode (pkt));
    else /* Insert the first one.  */
-@@ -1076,8 +1077,16 @@ proc_compressed (CTX c, PACKET *pkt)
-   int rc;
+@@ -1119,7 +1120,10 @@ proc_compressed (CTX c, PACKET *pkt)
  
    /*printf("zip: compressed data packet\n");*/
--  if (c->sigs_only)
+   if (c->sigs_only)
 -    rc = handle_compressed (c->ctrl, c, zd, proc_compressed_cb, c);
-+  if ( literals_seen )
-+    {
-+      log_error ("Compressed packet follows literal data packet\n");
-+      rc = GPG_ERR_UNEXPECTED;
-+    }
-+  else if ( c->sigs_only )
 +    {
 +      log_assert(!c->signed_data.used);
 +      rc = handle_compressed (c->ctrl, c, zd, proc_compressed_cb, c);
@@ -90,7 +80,7 @@ index af11877aa257e46662c42b6ff573ee01c3ad1547..3629fc921b742afd131e8d8e2664b201
    else if( c->encrypt_only )
      rc = handle_compressed (c->ctrl, c, zd, proc_encrypt_cb, c);
    else
-@@ -1596,6 +1605,7 @@ do_proc_packets (CTX c, iobuf_t a)
+@@ -1638,6 +1642,7 @@ do_proc_packets (CTX c, iobuf_t a)
    c->iobuf = a;
    init_packet(pkt);
    init_parse_packet (&parsectx, a);
@@ -98,7 +88,7 @@ index af11877aa257e46662c42b6ff573ee01c3ad1547..3629fc921b742afd131e8d8e2664b201
    while ((rc=parse_packet (&parsectx, pkt)) != -1)
      {
        any_data = 1;
-@@ -1607,6 +1617,12 @@ do_proc_packets (CTX c, iobuf_t a)
+@@ -1649,6 +1654,12 @@ do_proc_packets (CTX c, iobuf_t a)
            if (gpg_err_code (rc) == GPG_ERR_INV_PACKET
                && opt.list_packets == 0)
              break;
@@ -111,7 +101,7 @@ index af11877aa257e46662c42b6ff573ee01c3ad1547..3629fc921b742afd131e8d8e2664b201
            continue;
  	}
        newpkt = -1;
-@@ -1644,7 +1660,9 @@ do_proc_packets (CTX c, iobuf_t a)
+@@ -1686,7 +1697,9 @@ do_proc_packets (CTX c, iobuf_t a)
              case PKT_COMPRESSED:  rc = proc_compressed (c, pkt); break;
              case PKT_ONEPASS_SIG: newpkt = add_onepass_sig (c, pkt); break;
              case PKT_GPG_CONTROL: newpkt = add_gpg_control (c, pkt); break;
@@ -123,10 +113,10 @@ index af11877aa257e46662c42b6ff573ee01c3ad1547..3629fc921b742afd131e8d8e2664b201
  	}
        else if (c->encrypt_only)
 diff --git a/g10/packet.h b/g10/packet.h
-index 5a14015a16c872fe7b0b15468598daf7a05ffc02..82dfe786b46051491e7015e64441678140defa9e 100644
+index 7bc0a6461..7600abda9 100644
 --- a/g10/packet.h
 +++ b/g10/packet.h
-@@ -657,6 +657,7 @@ struct parse_packet_ctx_s
+@@ -673,6 +673,7 @@ struct parse_packet_ctx_s
    int free_last_pkt; /* Indicates that LAST_PKT must be freed.  */
    int skip_meta;     /* Skip ring trust packets.  */
    unsigned int n_parsed_packets;	/* Number of parsed packets.  */
@@ -134,7 +124,7 @@ index 5a14015a16c872fe7b0b15468598daf7a05ffc02..82dfe786b46051491e7015e644416781
  };
  typedef struct parse_packet_ctx_s *parse_packet_ctx_t;
  
-@@ -667,6 +668,7 @@ typedef struct parse_packet_ctx_s *parse_packet_ctx_t;
+@@ -683,6 +684,7 @@ typedef struct parse_packet_ctx_s *parse_packet_ctx_t;
      (a)->free_last_pkt = 0;         \
      (a)->skip_meta = 0;             \
      (a)->n_parsed_packets = 0;      \
@@ -143,7 +133,7 @@ index 5a14015a16c872fe7b0b15468598daf7a05ffc02..82dfe786b46051491e7015e644416781
  
  #define deinit_parse_packet(a) do { \
 diff --git a/g10/parse-packet.c b/g10/parse-packet.c
-index cea1f7ebc5daec3863ae963c1ab25500f86796fe..dca66ff427ea6778e536782ec6bda83584877342 100644
+index aa6bac9da..da3c4cee4 100644
 --- a/g10/parse-packet.c
 +++ b/g10/parse-packet.c
 @@ -738,6 +738,20 @@ parse (parse_packet_ctx_t ctx, PACKET *pkt, int onlykeypkts, off_t * retpos,
@@ -212,5 +202,5 @@ index cea1f7ebc5daec3863ae963c1ab25500f86796fe..dca66ff427ea6778e536782ec6bda835
         even if DO_SKIP is set.  */
      ;
 -- 
-2.36.1
+2.49.0
 

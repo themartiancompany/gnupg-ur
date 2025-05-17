@@ -1,7 +1,7 @@
-From d3f23a1a0d39ada1e103a85bfbd6fd0b42e71256 Mon Sep 17 00:00:00 2001
+From 4ab28480d2a5760316bc4cf67505196593c90259 Mon Sep 17 00:00:00 2001
 From: Vincent Breitmoser <look@my.amazin.horse>
 Date: Thu, 13 Jun 2019 21:27:43 +0200
-Subject: [PATCH 1/9] gpg: accept subkeys with a good revocation but no
+Subject: [PATCH 01/21] gpg: accept subkeys with a good revocation but no
  self-sig during import
 
 * g10/import.c (chk_self_sigs): Set the NODE_GOOD_SELFSIG flag when we
@@ -32,5 +32,5 @@ index 7e48284c1..8d67157e3 100644
                          {
                            /* Delete the last revocation sig since
 -- 
-2.47.1
+2.49.0
 
