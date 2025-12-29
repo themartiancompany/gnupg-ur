@@ -1,8 +1,7 @@
 From 1abc12a884004fdcaa2e0a07166264ce91661dc7 Mon Sep 17 00:00:00 2001
 From: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
 Date: Tue, 4 Feb 2025 01:22:41 -0500
-Subject: [PATCH 15/23] gpg: emit RSA pubkey algorithm when in compatibility
- modes
+Subject: [PATCH] gpg: emit RSA pubkey algorithm when in compatibility modes
 
 * doc/gpg.texi (Compliance Options): --gnupg offers LibrePGP behavior,
 and prefers LibrePGP where it diverges from OpenPGP; --rfc4880bis is
@@ -195,6 +194,3 @@ index 9b547ad23..0eacd610d 100644
    /* Parse the flags.  */
    keyuse = 0;
    if (flags)
--- 
-2.51.1
-

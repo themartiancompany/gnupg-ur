@@ -1,7 +1,7 @@
 From e2a8b3411810a0bdd74dfdc05ac9446e48261d05 Mon Sep 17 00:00:00 2001
 From: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
 Date: Tue, 4 Feb 2025 01:11:08 -0500
-Subject: [PATCH 16/23] gpg: Reintroduce --openpgp as distinct from --rfc4880
+Subject: [PATCH] gpg: Reintroduce --openpgp as distinct from --rfc4880
 
 * common/compliance.{c,h}: add CO_OPENPGP
 * options.h: #define OPENPGP by analogy with RFC4880
@@ -158,6 +158,3 @@ index 29641119d..c7fc1524b 100644
  #define RFC2440 (opt.compliance==CO_RFC2440)
  #define RFC4880 (opt.compliance==CO_RFC4880)
  #define PGP7    (opt.compliance==CO_PGP7)
--- 
-2.51.1
-
