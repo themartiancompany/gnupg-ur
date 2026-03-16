@@ -59,6 +59,9 @@ if [[ ! -v "_evmfs" ]]; then
     _evmfs="false"
   fi
 fi
+if [[ ! -v "_git" ]]; then
+  _git="true"
+fi
 if [[ ! -v "_ns" ]]; then
   # _ns="gnupg"
   _ns="freepg"
