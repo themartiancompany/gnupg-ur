@@ -633,17 +633,8 @@ jobs:
       - name:
           Installs latest stable Fur.
         run: |
-          /entrypoint.sh \
-            git \
-              clone \
-                --branch="main" \
-                --single-branch \
-                --depth=1 \
-                "https://github.com/themartiancompany/fur" \
-                "${HOME}/fur-src" || \
-            true
           cd \
-            "fur-src"
+            "${HOME}/fur-src"
           /entrypoint.sh \
             make \
               PREFIX="/usr" \
