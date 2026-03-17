@@ -654,7 +654,8 @@ jobs:
                 --noconfirm \
                 jq \
                 ${_pkgs} \
-                --overwrite="*"
+                --overwrite="*" || \
+            true
           /entrypoint.sh \
             bash \
               "${HOME}/fur-src/fur/fur" \
@@ -1267,7 +1268,8 @@ jobs:
               --noconfirm \
               jq \
               "${_pkgs[@]}" \
-              --overwrite="*"
+              --overwrite="*" || \
+            true
           bash \
             "${HOME}/fur-src/fur/fur" \
               -v \
@@ -1502,6 +1504,15 @@ jobs:
               --overwrite="*" || \
               true
           done
+          fur \
+            -v \
+            -t \
+              "ci" \
+            -m \
+              "github" \
+            -p \
+              "pacman" \
+            "libassuan"
       - name:
           Builds the package.
         run: |
