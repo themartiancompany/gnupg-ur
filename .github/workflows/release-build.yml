@@ -699,7 +699,23 @@ jobs:
             make \
               -C \
                 "reallymakepkg-src" \
-              install
+              install-scripts
+          /entrypoint.sh \
+            make \
+              -C \
+                "reallymakepkg-src" \
+              install-scripts
+          /entrypoint.sh \
+            make \
+              -C \
+                "reallymakepkg-src" \
+              install-configs || \
+            true
+          /entrypoint.sh \
+            install \
+              -vDm644 \
+              "configs/makepkg.gnu.conf" \
+              "/data/data/com.termux/files/usr/etc/reallymakepkg/makepkg.gnu.conf"
       - name:
           Installs latest Gur.
         run: |
@@ -1368,6 +1384,16 @@ jobs:
               "${HOME}/reallymakepkg-src"
             PREFIX="/usr" \
             install-scripts
+          make \
+            -C \
+              "${HOME}/reallymakepkg-src"
+            PREFIX="/usr" \
+            install-configs || \
+            true
+          install \
+            -vDm644 \
+            "configs/makepkg.gnu.conf" \
+            "/etc/reallymakepkg/makepkg.gnu.conf"
       - name:
           Installs latest Gur.
         run: |
@@ -1662,13 +1688,17 @@ jobs:
         run: |
           git \
             clone \
-              "https://github.com/themartiancompany/reallymakepkg" || \
+              --single-branch \
+              --branch \
+                "main" \
+              "https://github.com/themartiancompany/reallymakepkg-src" \
+              "${HOME}/reallymakepkg-src" || \
           true
-          cd \
-            "reallymakepkg"
           make \
+            -C \
+              "${HOME}/reallymakepkg-src" \
             PREFIX="/usr" \
-            install
+            install-scripts
           install \
             -vDm644 \
             "configs/makepkg.gnu.conf" \
