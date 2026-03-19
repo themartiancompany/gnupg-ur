@@ -758,7 +758,8 @@ jobs:
         run: |
           ( _evmfs="false" \
               recipe-get \
-                -v \
+                -o \
+                  "array" \
                 "PKGBUILD" \
                 "makedepends" || \
             true ) > \
@@ -1450,14 +1451,15 @@ jobs:
           ls
           ( _evmfs="false" \
               recipe-get \
-                -v \
+                -o \
+                  "array" \
                 "PKGBUILD" \
                 "makedepends" || \
             true ) > \
             "makedepends"
           echo \
             "Depends found: '$(cat "makedepends")'"
-          for _pkg in $(cat "makedepends" | cut -d '\n'); do \
+          for _pkg in $(cat "makedepends"); do \
             echo \
               "Extracting package name from '${_pkg}' with version-split."
             version-split \
@@ -1772,7 +1774,8 @@ jobs:
           true
           ( _evmfs="false" \
               recipe-get \
-                -v \
+                -o \
+                  "array" \
                 "PKGBUILD" \
                 "makedepends" || \
             true ) > \
