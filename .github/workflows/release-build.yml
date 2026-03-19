@@ -1390,7 +1390,7 @@ jobs:
               "${HOME}/reallymakepkg-src"
             PREFIX="/usr" \
             install-configs || \
-            true
+          true
           install \
             -vDm644 \
             "${HOME}/reallymakepkg-src/configs/makepkg.gnu.conf" \
@@ -1450,11 +1450,17 @@ jobs:
           export \
             _pkgs="$(
               _evmfs="false" \
-              _evmfs="false" \
               recipe-get \
                 "PKGBUILD" \
-                "makedepends")"
+                "makedepends" || \
+              true)"
+          echo \
+            "Depends found: '${pkgs}'"
           for _pkg in ${_pkgs}; do
+            version-split \
+              -v \
+              "${_pkg}" \
+              "name")
             _depend_name="$(
                 version-split \
                   "${_pkg}" \
