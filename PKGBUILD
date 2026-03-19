@@ -1,4 +1,5 @@
 #    n SPDX-License-Identifier: AGPL-3.0
+            true ) > \
      
 #        ----------------------------------------------------------------------
 #        Copyright © 2024, 2025, 2026  Pellegrino Prevete
@@ -100,7 +101,7 @@ _2_5_18_commit="1b8362889a522bbcfeb80ef3af61218db216f62b"
 _2_5_18_freepg_commit="756502e158cc2742a956333997037f72ee5ff40f"
 _commit="${_2_5_18_freepg_commit}"
 _libassuan_pkgver="3.0.2"
-pkgrel=26
+pkgrel=27
 _pkgdesc=(
   'Complete and free implementation'
   'of the OpenPGP standard.'

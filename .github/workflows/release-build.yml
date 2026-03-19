@@ -1475,26 +1475,27 @@ jobs:
             -d \
               " " \
             "PKGBUILD" \
-            "makedepends"
-          ( _evmfs="false" \
-            recipe-get \
-              -o \
-                "array" \
-              -d \
-                " " \
-              "PKGBUILD" \
-              "makedepends" || \
-            true ) > \
-            "makedepends"
+            "makedepends" > \
+          "${HOME}/makedepends"
+          # ( _evmfs="false" \
+          #   recipe-get \
+          #     -o \
+          #       "array" \
+          #     -d \
+          #       " " \
+          #     "PKGBUILD" \
+          #     "makedepends" || \
+          #   true ) > \
+          #   "makedepends"
           echo \
-            "Depends found: '$(cat "makedepends")'"
-          for _pkg in $(cat "makedepends"); do \
+            "Build dependencies found: '$(cat "${HOME}/makedepends")'"
+          for _pkg in $(cat "${HOME}/makedepends"); do \
             echo \
               "Extracting package name from '${_pkg}' with version-split."
             version-split \
               -v \
               "${_pkg}" \
-              "name")
+              "name"
             _depend_name="$( \
                 version-split \
                   "${_pkg}" \
@@ -1809,11 +1810,12 @@ jobs:
               recipe-get \
                 -o \
                   "array" \
+                -d \
+                  " " \
                 "PKGBUILD" \
-                "makedepends" || \
-            true ) > \
-            "makedepends"
-          for _pkg in $(cat "makedepends"); do \
+                "makedepends" > \
+            "${HOME}/makedepends"
+          for _pkg in $(cat "${HOME}/makedepends"); do \
             _mingw_name="mingw-w64-${{ matrix.env }}-${_pkg}"
             export \
               _pkgs_mingw="${_pkgs_mingw} ${_mingw_name}"
@@ -1822,35 +1824,35 @@ jobs:
               "makedepends-mingw"
           done
           done
-          for _pkg in $(cat "makedepends"); do \
+          for _pkg in $(cat "${HOME}/makedepends"); do \
             _depend_name="$( \
                 version-split \
                   "${_pkg}" \
-                  "name")"
+                  "name")"; \
             echo \
-              "Installing '${_depend_name}' with pacman."
+              "Installing '${_depend_name}' with pacman."; \
             pacman \
               -S \
                 --noconfirm \
                 jq \
                 "${_depend_name}" \
                 --overwrite="*" || \
-              true
+              true; \
           done
           for _pkg in $(cat "makedepends-mingw"); do \
             _depend_name="$( \
                 version-split \
                   "${_pkg}" \
-                  "name")"
+                  "name")"; \
             echo \
-              "Installing '${_depend_name}' with pacman."
+              "Installing '${_depend_name}' with pacman."; \
             pacman \
               -S \
                 --noconfirm \
                 jq \
                 "${_depend_name}" \
                 --overwrite="*" || \
-              true
+              true; \
           done
           for _pkg in $(cat "makedepends"); do \
             _depend_name="$( \
