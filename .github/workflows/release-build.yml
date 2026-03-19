@@ -1453,14 +1453,12 @@ jobs:
           export \
             _pkgbase="$( \
               _evmfs="false" \
-              /entrypoint.sh \
               recipe-get \
                 "PKGBUILD" \
                 "pkgbase")"
           export \
             _pkgname="$( \
               _evmfs="false" \
-              /entrypoint.sh \
               recipe-get \
                 "PKGBUILD" \
                 "pkgname")"
