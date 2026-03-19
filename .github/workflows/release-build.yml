@@ -729,17 +729,27 @@ jobs:
                   "PKGBUILD" \
                   "makedepends")"
           for _pkg in ${_pkgs}; do
+            _depend_name="$(
+              /entrypoint.sh \
+                version-split \
+                  "${_pkg}" \
+                  "name")"
             SHELL="bash" \
             /entrypoint.sh \
               pacman \
                 -S \
                   --noconfirm \
                   jq \
-                  "${_pkg}" \
+                  "${_depend_name}" \
                   --overwrite="*" || \
                 true
           done
           for _pkg in ${_pkgs}; do
+            _depend_name="$(
+              /entrypoint.sh \
+                version-split \
+                  "${_pkg}" \
+                  "name")"
             /entrypoint.sh \
               fur \
                 -v \
@@ -1345,18 +1355,45 @@ jobs:
           Installs build dependencies.
         run: |
           export \
-            _pkgs=(
-            $(_evmfs="false" \
+            _pkgs="$(
+              _evmfs="false" \
               _evmfs="false" \
               recipe-get \
                 "PKGBUILD" \
-                "makedepends")
-          )
-          pacman \
-            -S \
-            --noconfirm \
-            "${_pkgs[@]}" \
-            --overwrite="*"
+                "makedepends")"
+          for _pkg in ${_pkgs}; do
+            _depend_name="$(
+                version-split \
+                  "${_pkg}" \
+                  "name")"
+            echo \
+              "Installing '${_depend_name}' with pacman."
+            pacman \
+              -S \
+                --noconfirm \
+                jq \
+                "${_depend_name}" \
+                --overwrite="*" || \
+              true
+          done
+          for _pkg in ${_pkgs}; do
+            _depend_name="$(
+                version-split \
+                  "${_pkg}" \
+                  "name")"
+            echo \
+              "Installing '${_depend_name}' with fur."
+              fur \
+                -v \
+                -t \
+                  "ci" \
+                -m \
+                  "github" \
+                -p \
+                  "pacman" \
+                "${_depend_name}" || \
+              true
+          done
       - name:
           Builds the Arch package.
         run: |
@@ -1605,20 +1642,53 @@ jobs:
             export \
               _pkgs_mingw="${_pkgs_mingw} mingw-w64-${{ matrix.env }}-${_pkg}"
           done
+          done
           for _pkg in ${_pkgs}; do
+            _depend_name="$(
+                version-split \
+                  "${_pkg}" \
+                  "name")"
+            echo \
+              "Installing '${_depend_name}' with pacman."
             pacman \
               -S \
-              --noconfirm \
-              ${_pkg} \
-              --overwrite="*" || \
+                --noconfirm \
+                jq \
+                "${_depend_name}" \
+                --overwrite="*" || \
               true
           done
           for _pkg in ${_pkgs_mingw}; do
+            _depend_name="$(
+                version-split \
+                  "${_pkg}" \
+                  "name")"
+            echo \
+              "Installing '${_depend_name}' with pacman."
             pacman \
               -S \
-              --noconfirm \
-              ${_pkg} \
-              --overwrite="*" || \
+                --noconfirm \
+                jq \
+                "${_depend_name}" \
+                --overwrite="*" || \
+              true
+          done
+          for _pkg in ${_pkgs}; do
+            _depend_name="$(
+                version-split \
+                  "${_pkg}" \
+                  "name")"
+            echo \
+              "Installing '${_depend_name}' with fur."
+              fur \
+                -v \
+                -t \
+                  "ci" \
+                -m \
+                  "github" \
+                -p \
+                  "pacman" \
+                "${_depend_name}" || \
               true
           done
       - name:
