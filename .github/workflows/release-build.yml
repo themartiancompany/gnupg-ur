@@ -314,31 +314,31 @@ jobs:
             rm \
               -rf \
               "${HOME}/fur"
-      # - name:
-      #     Installs Reallymakepkg.
-      #   run: |
-      #     /entrypoint.sh \
-      #       fur \
-      #         -v \
-      #         -p \
-      #           "pacman" \
-      #         -d \
-      #         "reallymakepkg"
-      #     /entrypoint.sh \
-      #       rm \
-      #         "${HOME}/fur/termux/any/"*".pkg.tar."*".sig"
-      #     /entrypoint.sh \
-      #       tree \
-      #         "${HOME}"
-      #     /entrypoint.sh \
-      #       pacman \
-      #         -Udd \
-      #         --noconfirm \
-      #         "${HOME}/fur/termux/any/"*".pkg.tar."*
-      #     /entrypoint.sh \
-      #       rm \
-      #         -rf \
-      #         "${HOME}/fur"
+      - name:
+          Installs Reallymakepkg.
+        run: |
+          /entrypoint.sh \
+            fur \
+              -v \
+              -p \
+                "pacman" \
+              -d \
+              "reallymakepkg"
+          /entrypoint.sh \
+            rm \
+              "${HOME}/fur/termux/any/"*".pkg.tar."*".sig"
+          /entrypoint.sh \
+            tree \
+              "${HOME}"
+          /entrypoint.sh \
+            pacman \
+              -Udd \
+              --noconfirm \
+              "${HOME}/fur/termux/any/"*".pkg.tar."*
+          /entrypoint.sh \
+            rm \
+              -rf \
+              "${HOME}/fur"
       - name:
           Installs 'build essential' ahah.
         run: |
@@ -689,6 +689,11 @@ jobs:
       - name:
           Installs latest Reallymakepkg.
         run: |
+          /entrypoint.sh \
+            pacman \
+              -Rdd \
+              --noconfirm \
+              "reallymakepkg"
           /entrypoint.sh \
             git \
               clone \
@@ -1059,24 +1064,24 @@ jobs:
           rm \
             -rf \
             "${HOME}/fur"
-      # - name:
-      #     Installs Reallymakepkg.
-      #   run: |
-      #     fur \
-      #       -v \
-      #       -d \
-      #       "reallymakepkg"
-      #     rm \
-      #       "${HOME}/fur/arch/any/"*".pkg.tar."*".sig"
-      #     tree \
-      #       "${HOME}"
-      #     pacman \
-      #       -Udd \
-      #       --noconfirm \
-      #       "${HOME}/fur/arch/any/"*".pkg.tar."*
-      #     rm \
-      #       -rf \
-      #       "${HOME}/fur"
+      - name:
+          Installs Reallymakepkg.
+        run: |
+          fur \
+            -v \
+            -d \
+            "reallymakepkg"
+          rm \
+            "${HOME}/fur/arch/any/"*".pkg.tar."*".sig"
+          tree \
+            "${HOME}"
+          pacman \
+            -Udd \
+            --noconfirm \
+            "${HOME}/fur/arch/any/"*".pkg.tar."*
+          rm \
+            -rf \
+            "${HOME}/fur"
       - name:
           Installs Node Run.
         run: |
@@ -1373,6 +1378,10 @@ jobs:
       - name:
           Installs latest Reallymakepkg.
         run: |
+          pacman \
+            -Rdd \
+            --confirm \
+            "reallymakepkg"
           git \
             clone \
               --branch="main" \
@@ -1665,24 +1674,24 @@ jobs:
           rm \
             -rf \
             "${HOME}/fur"
-      # - name:
-      #     Installs Reallymakepkg.
-      #   run: |
-      #     fur \
-      #       -v \
-      #       -d \
-      #       "reallymakepkg"
-      #     rm \
-      #       "${HOME}/fur/arch/any/"*".pkg.tar."*".sig"
-      #     tree \
-      #       "${HOME}"
-      #     pacman \
-      #       -Udd \
-      #       --noconfirm \
-      #       "${HOME}/fur/arch/any/"*".pkg.tar."*
-      #     rm \
-      #       -rf \
-      #       "${HOME}/fur"
+      - name:
+          Installs Reallymakepkg.
+        run: |
+          fur \
+            -v \
+            -d \
+            "reallymakepkg"
+          rm \
+            "${HOME}/fur/arch/any/"*".pkg.tar."*".sig"
+          tree \
+            "${HOME}"
+          pacman \
+            -Udd \
+            --noconfirm \
+            "${HOME}/fur/arch/any/"*".pkg.tar."*
+          rm \
+            -rf \
+            "${HOME}/fur"
       - name:
           Installs latest Crash Bash Library.
         run: |
@@ -1700,6 +1709,10 @@ jobs:
       - name:
           Install latest Reallymakepkg.
         run: |
+          pacman \
+            -Rdd \
+            --confirm \
+            "reallymakepkg"
           git \
             clone \
               --single-branch \
