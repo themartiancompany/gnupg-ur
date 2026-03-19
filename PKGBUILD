@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: AGPL-3.0
-
-#        ----------------------------------------------------------------------
-#        Copyright © 2024, 2025, 2026  Pellegrino Prevete
-#    
-#        All rights reserved
-#        ----------------------------------------------------------------------
+#(  SPDX-License-Identifier: AGPL-3.0
+   
+#          ----------------------------------------------------------------------
+#          Copyright © 2024, 2025, 2026  Pellegrino Prevete
+#      
+#          All rights reserved
+#          ----------------------------------------------------------------------
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -100,7 +100,7 @@ _2_5_18_commit="1b8362889a522bbcfeb80ef3af61218db216f62b"
 _2_5_18_freepg_commit="756502e158cc2742a956333997037f72ee5ff40f"
 _commit="${_2_5_18_freepg_commit}"
 _libassuan_pkgver="3.0.2"
-pkgrel=28
+pkgrel=29
 _pkgdesc=(
   'Complete and free implementation'
   'of the OpenPGP standard.'
