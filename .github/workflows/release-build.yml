@@ -1455,15 +1455,11 @@ jobs:
                 "makedepends" || \
             true ) > \
             "makedepends"
-          export \
-            _pkgs="$( \
-              cat \
-                "makedepends")"
           echo \
             "Depends found: '$(cat "makedepends")'"
-          for _pkg in $(cat "makedepends"); do \
+          for _pkg in $(cat "makedepends" | cut -d '\n'); do \
             echo \
-              "Extracting pkg name from '${_pkg}' with version-split."
+              "Extracting package name from '${_pkg}' with version-split."
             version-split \
               -v \
               "${_pkg}" \
