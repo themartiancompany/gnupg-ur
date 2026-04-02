@@ -2177,7 +2177,6 @@ jobs:
             pacman \
               -S \
                 --noconfirm \
-                jq \
                 "${_depend_name}" \
                 --overwrite="*" || \
               true; \
@@ -2192,7 +2191,6 @@ jobs:
             pacman \
               -S \
                 --noconfirm \
-                jq \
                 "${_depend_name}" \
                 --overwrite="*" || \
               true; \
