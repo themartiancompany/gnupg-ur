@@ -154,7 +154,7 @@ _2_5_18_commit="1b8362889a522bbcfeb80ef3af61218db216f62b"
 _2_5_18_freepg_commit="756502e158cc2742a956333997037f72ee5ff40f"
 _commit="${_2_5_18_freepg_commit}"
 _libassuan_pkgver="3.0.2"
-pkgrel=84
+pkgrel=85
 _pkgdesc=(
   'Complete and free implementation'
   'of the OpenPGP standard.'
@@ -200,6 +200,8 @@ depends=(
   "zlib"
 )
 makedepends=(
+  "autoconf"
+  "automake"
   "bzip2"
   "libassuan>=${_libassuan_pkgver}"
   "librsvg"
