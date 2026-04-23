@@ -70,7 +70,6 @@ elif [[ "${_os}" == "Msys" ]]; then
   _libcompiler="gcc-libs"
   _npth="npth"
   _pcsclite="pcsclite"
-  _pcsclite="pcsclite"
   _sh="sh"
 else
   _msg=(
